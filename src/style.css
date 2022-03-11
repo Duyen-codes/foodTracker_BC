@@ -1,0 +1,135 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 62.5%;
+}
+
+:root {
+  --rebeccapurple: rebeccapurple;
+  --indigo: indigo;
+  --plum: plum;
+}
+
+body {
+  font-size: 2rem;
+  background: lightcyan;
+}
+
+header {
+  background: papayawhip;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+}
+
+.logo {
+  color: tomato;
+  font-size: 5rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+ul {
+  /* this removes the dots on the list items */
+  list-style: none;
+}
+
+a {
+  font-size: 22px;
+  /* this removes the line under the links */
+  text-decoration: none;
+}
+
+main {
+  margin-top: 3rem;
+  padding: 2rem;
+}
+
+section > * {
+  margin-bottom: 2rem;
+}
+
+.food-inputs {
+  margin-bottom: 2rem;
+}
+
+select {
+  padding: 1rem;
+  width: 200px;
+  font-size: inherit;
+  border-radius: 1rem;
+  background: white;
+  border: 1px solid #ddd;
+}
+
+option {
+  background: blanchedalmond;
+}
+
+input {
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: right;
+  font-size: inherit;
+  outline: none;
+  border: 1px solid #ddd;
+}
+
+.nutrition-inputs > * {
+  margin-bottom: 2rem;
+}
+
+.nutrition-inputs label {
+  width: 150px;
+  display: inline-block;
+}
+
+.add-btn {
+  padding: 0.7rem 2rem;
+  background: orange;
+  color: black;
+  font-size: inherit;
+  border: none;
+  border-radius: 1rem;
+}
+
+/* Log  */
+
+.total-log {
+  border-radius: 1rem;
+  border: 1px solid #ddd;
+  padding: 2rem;
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cards {
+  margin-top: 2rem;
+}
+
+.card-item {
+  text-align: center;
+  padding: 2rem;
+  line-height: 1.8;
+  border-radius: 1rem;
+  border-radius: 0 10px 0 rgba(0, 0, 0, 0.2);
+  width: 400px;
+  height: 200px;
+  border: 1px solid darkslategray;
+}
+
+.nutrition-details {
+  display: flex;
+  justify-content: space-around;
+}

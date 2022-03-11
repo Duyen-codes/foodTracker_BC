@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food tracker</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="logo">Food Tracker</div>
+    </header>
+    <main>
+      <section class="input-section">
+        <h2>Add food</h2>
+        <div class="food-inputs">
+          <label for="food-names">Food name:</label>
+          <select name="food-names" id="food-names">
+            <option value="">Please select</option>
+            <option value="pizza">Pizza</option>
+            <option value="pasta">Pasta</option>
+            <option value="burger">Burger</option>
+            <option value="soup">Soup</option>
+            <option value="salad">Salad</option>
+            <option value="apple">Apple</option>
+            <option value="peach">Peach</option>
+            <option value="cider">Cider</option>
+          </select>
+        </div>
+
+        <div class="nutrition-inputs">
+          <div>
+            <label for="carbs">Carbs</label>
+            <input id="carbs" type="text" placeholder="0g" />
+          </div>
+          <div>
+            <label for="protein">Protein</label>
+            <input type="text" id="protein" placeholder="0g" />
+          </div>
+          <div>
+            <label for="fat">Fat</label>
+            <input type="text" id="fat" placeholder="0g" />
+          </div>
+          <button type="button" class="add-btn">Add</button>
+        </div>
+      </section>
+      <section class="output-section">
+        <div class="stats-section">
+          <h2>Stats</h2>
+          <p>Loading stats...</p>
+        </div>
+        <div class="log-section">
+          <h2>Log</h2>
+          <div class="total-log">Total calories logged: <span>201</span></div>
+          <div class="cards">
+            <div class="card-item">
+              <h3>Pizza</h3>
+              <p><span>201</span> calories</p>
+              <ul class="nutrition-details">
+                <li>
+                  <p>Carbs</p>
+                  <p>20g</p>
+                </li>
+                <li>
+                  <p>Protein</p>
+                  <p>19g</p>
+                </li>
+                <li>
+                  <p>Fat</p>
+                  <p>5g</p>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="/src/main.js"></script>
+  </body>
+</html>
