@@ -35,7 +35,39 @@ class FetchWrapper {
 }
 
 const API = new FetchWrapper(
-  "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/duyennguyen123"
+  "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
 );
 
-API.get("").then((data) => console.log(data));
+API.get("duyennguyen123").then((data) => console.log(data));
+
+class FoodObject {
+  constructor(name, carb, protein, fat) {
+    this.name = name;
+    this.carb = carb;
+    this.protein = protein;
+    this.fat = fat;
+  }
+}
+
+const nameInput = document.querySelector("#food-names").value;
+const carbInput = Number(document.querySelector("#carbs").value);
+const proteinInput = Number(document.querySelector("#protein").value);
+const fatInput = Number(document.querySelector("#fat").value);
+const addBtn = document.querySelector(".add-btn");
+const logAmount = document.querySelector(".log-amount");
+const carbAmount = document.querySelector(".carb-amount");
+const proteinAmount = document.querySelector(".protein-amount");
+const fatAmount = document.querySelector(".fat-amount");
+const cardName = document.querySelector(".card-name");
+
+function getInputs() {
+  let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
+  console.log(foodItem);
+  logAmount.textContent = carbInput + proteinInput + fatInput + "g";
+  carbAmount.textContent = carbInput + "g";
+  proteinAmount.textContent = proteinInput + "g";
+  fatAmount.textContent = fatInput + "g";
+  cardName.textContent = nameInput;
+}
+
+addBtn.addEventListener("click", getInputs);
