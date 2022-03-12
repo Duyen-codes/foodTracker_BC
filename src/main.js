@@ -50,76 +50,30 @@ class FoodObject {
   }
 }
 
-// function getInputs() {
-//   let foodItem = new FoodObject(
-//     nameInput.value,
-//     Number(carbInput.value),
-//     Number(proteinInput.value),
-//     Number(fatInput.value)
-//   );
-//   console.log(foodItem);
-//   logAmount.textContent = carbInput + proteinInput + fatInput + "g";
-//   carbAmount.textContent = carbInput + "g";
-//   proteinAmount.textContent = proteinInput + "g";
-//   fatAmount.textContent = fatInput + "g";
-//   cardName.textContent = nameInput;
-//   API.post("duyennguyen123", foodItem);
-// }
-
-// const postData = () => {
-//   const nameInput = document.querySelector("#food-names");
-//   const carbInput = Number(document.querySelector("#carbs").value);
-//   const proteinInput = Number(document.querySelector("#protein").value);
-//   const fatInput = Number(document.querySelector("#fat").value);
-//   const logAmount = document.querySelector(".log-amount");
-//   const carbAmount = document.querySelector(".carb-amount");
-//   const proteinAmount = document.querySelector(".protein-amount");
-//   const fatAmount = document.querySelector(".fat-amount");
-//   const cardName = document.querySelector(".card-name");
-//   let foodItem = new FoodObject(
-//     nameInput.value,
-//     carbInput,
-//     proteinInput,
-//     fatInput
-//   );
-//   console.log(JSON.stringify(foodItem));
-//   logAmount.textContent = carbInput.value + proteinInput.value + fatInput + "g";
-//   carbAmount.textContent = carbInput + "g";
-//   proteinAmount.textContent = proteinInput + "g";
-//   fatAmount.textContent = fatInput + "g";
-//   cardName.textContent = nameInput;
-// API.post("duyennguyen123", foodItem);
 const cards = document.querySelector(".cards");
 const addBtn = document.querySelector(".add-btn");
-addBtn.addEventListener("click", postData);
+const logAmount = document.querySelector(".log-amount");
+const carbAmount = document.querySelector(".carb-amount");
+const proteinAmount = document.querySelector(".protein-amount");
+const fatAmount = document.querySelector(".fat-amount");
+const cardName = document.querySelector(".card-name");
+const form = document.querySelector("form");
 
-function postData() {
-  const nameInput = document.querySelector("#food-names");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nameInput = document.querySelector("#food-names").value;
   const carbInput = Number(document.querySelector("#carbs").value);
   const proteinInput = Number(document.querySelector("#protein").value);
   const fatInput = Number(document.querySelector("#fat").value);
-  const logAmount = document.querySelector(".log-amount");
-  const carbAmount = document.querySelector(".carb-amount");
-  const proteinAmount = document.querySelector(".protein-amount");
-  const fatAmount = document.querySelector(".fat-amount");
-  const cardName = document.querySelector(".card-name");
-  let foodItem = new FoodObject(
-    nameInput.value,
-    carbInput,
-    proteinInput,
-    fatInput
-  );
 
+  let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
+  console.log(foodItem);
   logAmount.textContent = carbInput + proteinInput + fatInput + "g";
-  // carbAmount.textContent = carbInput + "g";
-  // proteinAmount.textContent = proteinInput + "g";
-  // fatAmount.textContent = fatInput + "g";
-  // cardName.textContent = nameInput.value;
 
   const addCard = (foodItem) => {
     cards.innerHTML += `
     <div class="card-item">
-    <h3 class="card-name">${nameInput.value}</h3>
+    <h3 class="card-name">${nameInput}</h3>
     <p><span>${carbInput + proteinInput + fatInput}g</span> calories</p>
     <ul class="nutrition-details">
       <li>
@@ -138,4 +92,5 @@ function postData() {
   </div>`;
   };
   addCard();
-}
+  form.reset();
+});

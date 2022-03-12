@@ -133,3 +133,7 @@ input {
   display: flex;
   justify-content: space-around;
 }
+
+.card-name::first-letter {
+  text-transform: uppercase;
+}
