@@ -12,21 +12,24 @@
       <div class="logo">Food Tracker</div>
     </header>
     <main>
+      <!-- input section  -->
       <section class="input-section">
-        <h2>Add food</h2>
         <form class="food-inputs">
-          <label for="food-names">Food name:</label>
-          <select name="food-names" id="food-names" autocomplete="off">
-            <option value="">Please select</option>
-            <option value="pizza">Pizza</option>
-            <option value="pasta">Pasta</option>
-            <option value="burger">Burger</option>
-            <option value="soup">Soup</option>
-            <option value="salad">Salad</option>
-            <option value="apple">Apple</option>
-            <option value="peach">Peach</option>
-            <option value="cider">Cider</option>
-          </select>
+          <h2 class="form-title">Add food:</h2>
+          <div>
+            <label for="food-names">Food name:</label>
+            <select name="food-names" id="food-names" autocomplete="off">
+              <option value="">Please select</option>
+              <option value="pizza">Pizza</option>
+              <option value="pasta">Pasta</option>
+              <option value="burger">Burger</option>
+              <option value="soup">Soup</option>
+              <option value="salad">Salad</option>
+              <option value="apple">Apple</option>
+              <option value="peach">Peach</option>
+              <option value="cider">Cider</option>
+            </select>
+          </div>
           <div class="nutrition-inputs">
             <div>
               <label for="carbs">Carbs</label>
@@ -36,6 +39,7 @@
                 placeholder="0g"
                 onfocus="placeholder=''"
                 onblur="placeholder='0g'"
+                autocomplete="off"
               />
             </div>
             <div>
@@ -46,6 +50,7 @@
                 placeholder="0g"
                 onfocus="placeholder=''"
                 onblur="placeholder='0g'"
+                autocomplete="off"
               />
             </div>
             <div>
@@ -56,12 +61,15 @@
                 placeholder="0g"
                 onfocus="placeholder=''"
                 onblur="placeholder='0g'"
+                autocomplete="off"
               />
             </div>
             <button type="submit" class="add-btn">Add</button>
           </div>
         </form>
       </section>
+
+      <!-- Output section  -->
       <section class="output-section">
         <div class="stats-section">
           <h2>Stats</h2>
