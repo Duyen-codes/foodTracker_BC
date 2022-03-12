@@ -129,7 +129,6 @@ label {
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-auto-rows: 200px;
   gap: 3rem;
-  border: 1px solid red;
 }
 
 .card-item {
