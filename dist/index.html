@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food tracker</title>
+    <link rel="stylesheet" href="/index.5952072d.css">
+  </head>
+  <body>
+    <header>
+      <div class="logo">Food Tracker</div>
+    </header>
+    <main>
+      <!-- input section  -->
+      <section class="input-section">
+        <form class="food-inputs">
+          <h2 class="form-title">Add food:</h2>
+          <div>
+            <label for="food-names">Food name:</label>
+            <select name="food-names" id="food-names" autocomplete="off">
+              <option value="" disabled="" selected="">Please select</option>
+              <option value="pizza">Pizza</option>
+              <option value="pasta">Pasta</option>
+              <option value="burger">Burger</option>
+              <option value="soup">Soup</option>
+              <option value="salad">Salad</option>
+              <option value="apple">Apple</option>
+              <option value="peach">Peach</option>
+              <option value="cider">Cider</option>
+            </select>
+          </div>
+          <div class="nutrition-inputs">
+            <div>
+              <label for="carbs">Carbs</label>
+              <input id="carbs" type="number" placeholder="0g" onfocus="placeholder=''" onblur="placeholder='0g'" autocomplete="off">
+            </div>
+            <div>
+              <label for="protein">Protein</label>
+              <input type="number" id="protein" placeholder="0g" onfocus="placeholder=''" onblur="placeholder='0g'" autocomplete="off">
+            </div>
+            <div>
+              <label for="fat">Fat</label>
+              <input type="number" id="fat" placeholder="0g" onfocus="placeholder=''" onblur="placeholder='0g'" autocomplete="off">
+            </div>
+            <button type="submit" class="add-btn">Add</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Output section  -->
+      <section class="output-section">
+        <div class="stats-section">
+          <h2>Stats</h2>
+          <p>Loading stats...</p>
+          <canvas id="myChart" width="200" height="200"></canvas>
+        </div>
+        <div class="log-section">
+          <h2>Log</h2>
+          <div class="total-log">
+            Total calories logged <span class="log-amount">0g</span>
+          </div>
+        </div>
+        <div class="cards cards-section">
+          <!-- <div class="card-item">
+              <h3 class="card-name">Pizza</h3>
+              <p><span>201</span> calories</p>
+              <ul class="nutrition-details">
+                <li>
+                  <p>Carbs</p>
+                  <p class="carb-amount"></p>
+                </li>
+                <li>
+                  <p>Protein</p>
+                  <p class="protein-amount">19g</p>
+                </li>
+                <li>
+                  <p>Fat</p>
+                  <p class="fat-amount">5g</p>
+                </li>
+              </ul>
+            </div> -->
+        </div>
+      </section>
+    </main>
+    <script src="/index.147655b4.js" defer=""></script>
+  </body>
+</html>

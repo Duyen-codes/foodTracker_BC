@@ -4,10 +4,6 @@
 // import Chart from "chart.js/auto";
 import { FetchWrapper } from "./fetch-wrapper.js";
 
-const API = new FetchWrapper(
-  "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
-);
-
 class FoodObject {
   constructor(name, carb, protein, fat) {
     this.name = name;
@@ -67,3 +63,36 @@ const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
 
 // Event Listener
 form.addEventListener("submit", getInputs);
+
+let fat = 10;
+let protein = 12;
+let carbs = 13;
+let foodname = "pizza";
+let body = {
+  fields: {
+    fat: {
+      integerValue: fat,
+    },
+    protein: {
+      integerValue: protein,
+    },
+    carbs: {
+      integerValue: carbs,
+    },
+    foodName: {
+      stringValue: foodname,
+    },
+  },
+};
+const API = new FetchWrapper(
+  "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
+);
+
+// posting data to firebase API
+console.log(API.post("duyen", body));
+
+// GEt data back after posting from firebase endpoint
+let json = API.get("duyen");
+API.get(json).then((data) => {
+  console.log(data);
+});
