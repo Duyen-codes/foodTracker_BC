@@ -1,7 +1,7 @@
 // IMPORT MODULES
-// import snackbar from "snackbar";
-// import "snackbar/dist/snackbar.min.css";
-// import Chart from "chart.js/auto";
+import snackbar from "snackbar";
+import "snackbar/dist/snackbar.min.css";
+import Chart from "chart.js/auto";
 import { FetchWrapper } from "./fetch-wrapper.js";
 
 class FoodObject {
@@ -36,6 +36,7 @@ const getInputs = (e) => {
   logAmount.textContent = carbInput + proteinInput + fatInput + "g";
 
   renderCard(foodItem);
+  postData(foodItem);
 };
 
 const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
@@ -64,35 +65,37 @@ const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
 // Event Listener
 form.addEventListener("submit", getInputs);
 
-let fat = 10;
-let protein = 12;
-let carbs = 13;
-let foodname = "pizza";
-let body = {
-  fields: {
-    fat: {
-      integerValue: fat,
+function postData({ nameInput, carbInput, proteinInput, fatInput }) {
+  let fat;
+  let protein;
+  let carbs;
+  let foodname;
+  let body = {
+    fields: {
+      fat: {
+        integerValue: fatInput,
+      },
+      protein: {
+        integerValue: proteinInput,
+      },
+      carbs: {
+        integerValue: carbInput,
+      },
+      foodName: {
+        stringValue: nameInput,
+      },
     },
-    protein: {
-      integerValue: protein,
-    },
-    carbs: {
-      integerValue: carbs,
-    },
-    foodName: {
-      stringValue: foodname,
-    },
-  },
-};
-const API = new FetchWrapper(
-  "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
-);
+  };
+  const API = new FetchWrapper(
+    "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
+  );
 
-// posting data to firebase API
-console.log(API.post("duyen", body));
+  // posting data to firebase API
+  console.log(API.post("duyen", body));
 
-// GEt data back after posting from firebase endpoint
-let json = API.get("duyen");
-API.get(json).then((data) => {
-  console.log(data);
-});
+  // GEt data back after posting from firebase endpoint
+  let json = API.get("duyen");
+  API.get(json).then((data) => {
+    console.log(data);
+  });
+}
