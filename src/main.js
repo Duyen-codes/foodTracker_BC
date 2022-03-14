@@ -1,7 +1,7 @@
 // IMPORT MODULES
 // import snackbar from "snackbar";
 // import "snackbar/dist/snackbar.min.css";
-import Chart from "chart.js/auto";
+// import Chart from "chart.js/auto";
 import { FetchWrapper } from "./fetch-wrapper.js";
 
 const API = new FetchWrapper(
@@ -17,6 +17,7 @@ class FoodObject {
   }
 }
 
+// Queries
 const cards = document.querySelector(".cards");
 const logAmount = document.querySelector(".log-amount");
 const carbAmount = document.querySelector(".carb-amount");
@@ -41,8 +42,6 @@ const getInputs = (e) => {
   renderCard(foodItem);
 };
 
-form.addEventListener("submit", getInputs);
-
 const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
   cards.innerHTML += `
   <div class="card-item">
@@ -65,18 +64,6 @@ const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
 </div>`;
   form.reset();
 };
-// (async () => {
-//   const rawResponse = await fetch(
-//     "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/",
-//     {
-//       method: "POST",
-//       headers: {
-//         Accept: "application/json",
-//         "Content-type": "application/json",
-//       },
-//       body: JSON.stringify({ a: 1 }),
-//     }
-//   );
-//   const content = await rawResponse.json();
-//   console.log(content);
-// })();
+
+// Event Listener
+form.addEventListener("submit", getInputs);
