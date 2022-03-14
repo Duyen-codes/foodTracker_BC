@@ -99,3 +99,7 @@ function postData({ nameInput, carbInput, proteinInput, fatInput }) {
     console.log(data);
   });
 }
+
+// Add chart
+const ctx = document.querySelector(".myChart");
+function createChart() {}

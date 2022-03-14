@@ -534,6 +534,10 @@ function postData({ nameInput , carbInput , proteinInput , fatInput  }) {
         console.log(data);
     });
 }
+// Add chart
+const ctx = document.querySelector(".myChart");
+function createChart() {
+}
 
 },{"./fetch-wrapper.js":"gQ6Ql","snackbar":"60sYh","snackbar/dist/snackbar.min.css":"gJlwf","chart.js/auto":"f3sfP","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"gQ6Ql":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
