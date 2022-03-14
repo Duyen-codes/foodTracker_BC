@@ -2,7 +2,7 @@
 import snackbar from "snackbar";
 import "snackbar/dist/snackbar.min.css";
 import Chart from "chart.js/auto";
-import { FetchWrapper } from "./fetch-wrapper.js";
+import { FetchWrapper } from "./fetch-wrapper";
 
 class FoodObject {
   constructor(name, carb, protein, fat) {
@@ -21,6 +21,50 @@ const proteinAmount = document.querySelector(".protein-amount");
 const fatAmount = document.querySelector(".fat-amount");
 const cardName = document.querySelector(".card-name");
 const form = document.querySelector("form");
+// Add chart
+const ctx = document.querySelector("#myChart").getContext("2d");
+
+// Fetch API
+
+const API = new FetchWrapper(
+  "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
+);
+
+// Post Data
+
+function postData({ nameInput, carbInput, proteinInput, fatInput }) {
+  let fat;
+  let protein;
+  let carbs;
+  let foodname;
+  let body = {
+    fields: {
+      fat: {
+        integerValue: fatInput,
+      },
+      protein: {
+        integerValue: proteinInput,
+      },
+      carbs: {
+        integerValue: carbInput,
+      },
+      foodName: {
+        stringValue: nameInput,
+      },
+    },
+  };
+
+  // posting data to firebase API
+  console.log(API.post("duyen", body));
+
+  // Get data back after posting from firebase endpoint
+  let json = API.get("duyen");
+  API.get(json).then((data) => {
+    console.log(data);
+  });
+}
+
+// Get inputs from form
 
 const getInputs = (e) => {
   e.preventDefault();
@@ -32,11 +76,34 @@ const getInputs = (e) => {
 
   let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
   foodItem = { nameInput, carbInput, proteinInput, fatInput };
-  console.log(foodItem);
   logAmount.textContent = carbInput + proteinInput + fatInput + "g";
 
   renderCard(foodItem);
   postData(foodItem);
+  createChart(foodItem);
+};
+
+const createChart = ({ carbInput, proteinInput, fatInput }) => {
+  console.log("createChart: ", carbInput, proteinInput, fatInput);
+  const data = {
+    labels: ["carb", "protein", "fat"],
+    datasets: [
+      {
+        label: "Nutrients",
+        backgroundColor: ["yellow", "orange", "green"],
+        data: [carbInput, proteinInput, fatInput],
+      },
+    ],
+  };
+
+  const config = {
+    type: "bar",
+    data: data,
+    options: {},
+  };
+
+  const myChart = new Chart(ctx, config);
+  return myChart;
 };
 
 const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
@@ -64,42 +131,3 @@ const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
 
 // Event Listener
 form.addEventListener("submit", getInputs);
-
-function postData({ nameInput, carbInput, proteinInput, fatInput }) {
-  let fat;
-  let protein;
-  let carbs;
-  let foodname;
-  let body = {
-    fields: {
-      fat: {
-        integerValue: fatInput,
-      },
-      protein: {
-        integerValue: proteinInput,
-      },
-      carbs: {
-        integerValue: carbInput,
-      },
-      foodName: {
-        stringValue: nameInput,
-      },
-    },
-  };
-  const API = new FetchWrapper(
-    "https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/"
-  );
-
-  // posting data to firebase API
-  console.log(API.post("duyen", body));
-
-  // GEt data back after posting from firebase endpoint
-  let json = API.get("duyen");
-  API.get(json).then((data) => {
-    console.log(data);
-  });
-}
-
-// Add chart
-const ctx = document.querySelector(".myChart");
-function createChart() {}

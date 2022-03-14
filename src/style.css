@@ -21,6 +21,7 @@ html {
 body {
   font-size: 2rem;
   background: lightcyan;
+  border: 1px solid red;
 }
 
 header {
@@ -40,13 +41,11 @@ header {
 }
 
 ul {
-  /* this removes the dots on the list items */
   list-style: none;
 }
 
 a {
   font-size: 22px;
-  /* this removes the line under the links */
   text-decoration: none;
 }
 
@@ -110,7 +109,7 @@ label {
 .output-section {
   display: flex;
   gap: 3rem;
-  flex-flow: column wrap;
+  flex-flow: column;
 }
 /* Log  */
 
@@ -118,7 +117,7 @@ label {
   border-radius: 1rem;
   border: 1px solid #ddd;
   padding: 2rem;
-  width: 90%;
+  /* width: 90%; */
   margin: 0 auto;
   text-align: center;
 }

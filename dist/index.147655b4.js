@@ -462,7 +462,7 @@ var _snackbarDefault = parcelHelpers.interopDefault(_snackbar);
 var _snackbarMinCss = require("snackbar/dist/snackbar.min.css");
 var _auto = require("chart.js/auto");
 var _autoDefault = parcelHelpers.interopDefault(_auto);
-var _fetchWrapperJs = require("./fetch-wrapper.js");
+var _fetchWrapper = require("./fetch-wrapper");
 class FoodObject {
     constructor(name, carb, protein, fat){
         this.name = name;
@@ -479,31 +479,11 @@ const proteinAmount = document.querySelector(".protein-amount");
 const fatAmount = document.querySelector(".fat-amount");
 const cardName = document.querySelector(".card-name");
 const form = document.querySelector("form");
-const getInputs = (e)=>{
-    e.preventDefault();
-    console.log("submit");
-    const nameInput = document.querySelector("#food-names").value;
-    const carbInput = Number(document.querySelector("#carbs").value);
-    const proteinInput = Number(document.querySelector("#protein").value);
-    const fatInput = Number(document.querySelector("#fat").value);
-    let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
-    foodItem = {
-        nameInput,
-        carbInput,
-        proteinInput,
-        fatInput
-    };
-    console.log(foodItem);
-    logAmount.textContent = carbInput + proteinInput + fatInput + "g";
-    renderCard(foodItem);
-    postData(foodItem);
-};
-const renderCard = ({ nameInput , carbInput , proteinInput , fatInput  })=>{
-    cards.innerHTML += `\n  <div class="card-item">\n  <h3 class="card-name">${nameInput}</h3>\n  <p><span>${carbInput + proteinInput + fatInput}g</span> calories</p>\n  <ul class="nutrition-details">\n    <li>\n      <p>Carbs</p>\n      <p class="carb-amount">${carbInput}g</p>\n    </li>\n    <li>\n      <p>Protein</p>\n      <p class="protein-amount">${proteinInput}g</p>\n    </li>\n    <li>\n      <p>Fat</p>\n      <p class="fat-amount">${fatInput}g</p>\n    </li>\n  </ul>\n</div>`;
-    form.reset();
-};
-// Event Listener
-form.addEventListener("submit", getInputs);
+// Add chart
+const ctx = document.querySelector("#myChart").getContext("2d");
+// Fetch API
+const API = new _fetchWrapper.FetchWrapper("https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/");
+// Post Data
 function postData({ nameInput , carbInput , proteinInput , fatInput  }) {
     let fat1;
     let protein1;
@@ -525,90 +505,75 @@ function postData({ nameInput , carbInput , proteinInput , fatInput  }) {
             }
         }
     };
-    const API = new _fetchWrapperJs.FetchWrapper("https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/");
     // posting data to firebase API
     console.log(API.post("duyen", body));
-    // GEt data back after posting from firebase endpoint
+    // Get data back after posting from firebase endpoint
     let json = API.get("duyen");
     API.get(json).then((data)=>{
         console.log(data);
     });
 }
-// Add chart
-const ctx = document.querySelector(".myChart");
-function createChart() {
-}
-
-},{"./fetch-wrapper.js":"gQ6Ql","snackbar":"60sYh","snackbar/dist/snackbar.min.css":"gJlwf","chart.js/auto":"f3sfP","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"gQ6Ql":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "FetchWrapper", ()=>FetchWrapper
-);
-class FetchWrapper {
-    constructor(baseURL){
-        this.baseURL = baseURL;
-    }
-    get(endpoint) {
-        return fetch(this.baseURL + endpoint).then((response)=>response.json()
-        );
-    }
-    put(endpoint, body) {
-        return this._send("put", endpoint, body);
-    }
-    post(endpoint, body) {
-        return this._send("post", endpoint, body);
-    }
-    patch(endpoint, body) {
-        return this._send("patch", endpoint, body);
-    }
-    delete(endpoint, body) {
-        return this._send("delete", endpoint, body);
-    }
-    _send(method, endpoint, body) {
-        return fetch(this.baseURL + endpoint, {
-            method,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(body)
-        }).then((response)=>response.json()
-        );
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
+// Get inputs from form
+const getInputs = (e)=>{
+    e.preventDefault();
+    console.log("submit");
+    const nameInput = document.querySelector("#food-names").value;
+    const carbInput = Number(document.querySelector("#carbs").value);
+    const proteinInput = Number(document.querySelector("#protein").value);
+    const fatInput = Number(document.querySelector("#fat").value);
+    let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
+    foodItem = {
+        nameInput,
+        carbInput,
+        proteinInput,
+        fatInput
     };
+    logAmount.textContent = carbInput + proteinInput + fatInput + "g";
+    renderCard(foodItem);
+    postData(foodItem);
+    createChart(foodItem);
 };
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
+const createChart = ({ carbInput , proteinInput , fatInput  })=>{
+    console.log("createChart: ", carbInput, proteinInput, fatInput);
+    const data = {
+        labels: [
+            "carb",
+            "protein",
+            "fat"
+        ],
+        datasets: [
+            {
+                label: "Nutrients",
+                backgroundColor: [
+                    "yellow",
+                    "orange",
+                    "green"
+                ],
+                data: [
+                    carbInput,
+                    proteinInput,
+                    fatInput
+                ]
+            }, 
+        ]
+    };
+    const config = {
+        type: "bar",
+        data: data,
+        options: {
+        }
+    };
+    const myChart = new _autoDefault.default(ctx, config);
+    return myChart;
 };
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule') return;
-        // Skip duplicate re-exports when they have the same value.
-        if (key in dest && dest[key] === source[key]) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
+const renderCard = ({ nameInput , carbInput , proteinInput , fatInput  })=>{
+    cards.innerHTML += `\n  <div class="card-item">\n  <h3 class="card-name">${nameInput}</h3>\n  <p><span>${carbInput + proteinInput + fatInput}g</span> calories</p>\n  <ul class="nutrition-details">\n    <li>\n      <p>Carbs</p>\n      <p class="carb-amount">${carbInput}g</p>\n    </li>\n    <li>\n      <p>Protein</p>\n      <p class="protein-amount">${proteinInput}g</p>\n    </li>\n    <li>\n      <p>Fat</p>\n      <p class="fat-amount">${fatInput}g</p>\n    </li>\n  </ul>\n</div>`;
+    form.reset();
 };
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
+// Event Listener
+form.addEventListener("submit", getInputs);
 
-},{}],"60sYh":[function(require,module,exports) {
+},{"snackbar":"60sYh","snackbar/dist/snackbar.min.css":"gJlwf","chart.js/auto":"f3sfP","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./fetch-wrapper":"gQ6Ql"}],"60sYh":[function(require,module,exports) {
 'use strict';
 var _snackbar = require('./snackbar');
 var _snackbar2 = _interopRequireDefault(_snackbar);
@@ -13588,6 +13553,75 @@ function readStyle(options) {
 }
 function styleChanged(style, prevStyle) {
     return prevStyle && JSON.stringify(style) !== JSON.stringify(prevStyle);
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"JacNc":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule') return;
+        // Skip duplicate re-exports when they have the same value.
+        if (key in dest && dest[key] === source[key]) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"gQ6Ql":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "FetchWrapper", ()=>FetchWrapper
+);
+class FetchWrapper {
+    constructor(baseURL){
+        this.baseURL = baseURL;
+    }
+    get(endpoint) {
+        return fetch(this.baseURL + endpoint).then((response)=>response.json()
+        );
+    }
+    put(endpoint, body) {
+        return this._send("put", endpoint, body);
+    }
+    post(endpoint, body) {
+        return this._send("post", endpoint, body);
+    }
+    patch(endpoint, body) {
+        return this._send("patch", endpoint, body);
+    }
+    delete(endpoint, body) {
+        return this._send("delete", endpoint, body);
+    }
+    _send(method, endpoint, body) {
+        return fetch(this.baseURL + endpoint, {
+            method,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(body)
+        }).then((response)=>response.json()
+        );
+    }
 }
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}]},["kAaS7","i87aF"], "i87aF", "parcelRequire47c4")
