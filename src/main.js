@@ -4,15 +4,6 @@ import "snackbar/dist/snackbar.min.css";
 import Chart from "chart.js/auto";
 import { FetchWrapper } from "./fetch-wrapper";
 
-class FoodObject {
-  constructor(name, carb, protein, fat) {
-    this.name = name;
-    this.carb = carb;
-    this.protein = protein;
-    this.fat = fat;
-  }
-}
-
 // Queries
 const cards = document.querySelector(".cards");
 const logAmount = document.querySelector(".log-amount");
@@ -64,6 +55,17 @@ function postData({ nameInput, carbInput, proteinInput, fatInput }) {
   });
 }
 
+// Create object using class constructor
+
+class FoodObject {
+  constructor(name, carb, protein, fat) {
+    this.name = name;
+    this.carb = carb;
+    this.protein = protein;
+    this.fat = fat;
+  }
+}
+
 // Get inputs from form
 
 const getInputs = (e) => {
@@ -76,20 +78,24 @@ const getInputs = (e) => {
 
   let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
   foodItem = { nameInput, carbInput, proteinInput, fatInput };
-  logAmount.textContent = carbInput + proteinInput + fatInput + "g";
 
-  renderCard(foodItem);
-  postData(foodItem);
-  createChart(foodItem);
+  if (nameInput !== "" && carbInput && proteinInput && fatInput) {
+    snackbar.show("Food added successfully");
+    renderCard(foodItem);
+    postData(foodItem);
+    baseChart.destroy();
+    baseChart = createChart(foodItem);
+  }
 };
 
+// CREAT CHART
+
 const createChart = ({ carbInput, proteinInput, fatInput }) => {
-  console.log("createChart: ", carbInput, proteinInput, fatInput);
   const data = {
-    labels: ["carb", "protein", "fat"],
+    labels: ["Carbs", "Protein", "Fat"],
     datasets: [
       {
-        label: "Nutrients",
+        label: "Macronutrients",
         backgroundColor: ["yellow", "orange", "green"],
         data: [carbInput, proteinInput, fatInput],
       },
@@ -106,11 +112,16 @@ const createChart = ({ carbInput, proteinInput, fatInput }) => {
   return myChart;
 };
 
+// RENDER CARD
+
 const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
+  let totalCalo = Number(carbInput * 4 + proteinInput * 4 + fatInput * 9);
+  logAmount.textContent = totalCalo + "kcal";
+  console.log(totalCalo);
   cards.innerHTML += `
   <div class="card-item">
   <h3 class="card-name">${nameInput}</h3>
-  <p><span>${carbInput + proteinInput + fatInput}g</span> calories</p>
+  <p><span>${totalCalo}</span> calories</p>
   <ul class="nutrition-details">
     <li>
       <p>Carbs</p>
@@ -128,6 +139,9 @@ const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
 </div>`;
   form.reset();
 };
+
+// CREATE chart with empty data to show at first
+let baseChart = createChart(0, 0, 0);
 
 // Event Listener
 form.addEventListener("submit", getInputs);
