@@ -518,7 +518,7 @@ const getInputs = (e)=>{
     const carbInput = Number(document.querySelector("#carbs").value);
     const proteinInput = Number(document.querySelector("#protein").value);
     const fatInput = Number(document.querySelector("#fat").value);
-    console.log("fatInput", fatInput);
+    console.log("carbInput: ", carbInput, "proteinInput: ", "fatInput: ", fatInput);
     let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
     foodItem = {
         nameInput,
@@ -535,8 +535,8 @@ const getInputs = (e)=>{
     }
 };
 // RENDER CARD
-const renderCard = async ()=>{
-    const response = await API.get("duyen").then((data)=>{
+const renderCard = ()=>{
+    API.get("duyen").then((data)=>{
         data.documents.forEach((item)=>{
             cards.insertAdjacentHTML("beforeend", `\n      <div class="card-item">\n      <h3 class="card-name">${item.fields.foodName.stringValue}</h3>\n      <p><span>${item.fields.foodName.stringValue}</span> calories</p>\n      <ul class="nutrition-details">\n        <li>\n          <p>Carbs</p>\n          <p class="carb-amount">${item.fields.carbs.integerValue}g</p>\n        </li>\n        <li>\n          <p>Protein</p>\n          <p class="protein-amount">${item.fields.protein.integerValue}g</p>\n        </li>\n        <li>\n          <p>Fat</p>\n          <p class="fat-amount">${item.fields.fat.integerValue}g</p>\n        </li>\n      </ul>\n    </div>`);
         });

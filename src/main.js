@@ -71,7 +71,13 @@ const getInputs = (e) => {
   const carbInput = Number(document.querySelector("#carbs").value);
   const proteinInput = Number(document.querySelector("#protein").value);
   const fatInput = Number(document.querySelector("#fat").value);
-  console.log("fatInput", fatInput);
+  console.log(
+    "carbInput: ",
+    carbInput,
+    "proteinInput: ",
+    "fatInput: ",
+    fatInput
+  );
 
   let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
   foodItem = { nameInput, carbInput, proteinInput, fatInput };
@@ -86,8 +92,8 @@ const getInputs = (e) => {
 
 // RENDER CARD
 
-const renderCard = async () => {
-  const response = await API.get("duyen").then((data) => {
+const renderCard = () => {
+  API.get("duyen").then((data) => {
     data.documents.forEach((item) => {
       cards.insertAdjacentHTML(
         "beforeend",
