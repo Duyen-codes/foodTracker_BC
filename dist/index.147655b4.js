@@ -543,6 +543,8 @@ const renderCard = async ()=>{
     });
     form.reset();
 };
+// Show card on page load
+renderCard();
 // Event Listener
 form.addEventListener("submit", getInputs);
 
