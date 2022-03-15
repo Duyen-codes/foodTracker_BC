@@ -498,14 +498,11 @@ function postData({ nameInput , carbInput , proteinInput , fatInput  }) {
         }
     };
     // posting data to firebase API
-    console.log(API.post("duyen", body));
+    API.post("duyen", body);
     // Get data back after posting from firebase endpoint
     let json = API.get("duyen");
-    API.get(json).then((data)=>{
-        console.log(data);
-    });
 }
-// Create object using class constructor
+// Object constructor
 class FoodObject {
     constructor(name, carb, protein, fat){
         this.name = name;
@@ -517,11 +514,11 @@ class FoodObject {
 // Get inputs from form
 const getInputs = (e)=>{
     e.preventDefault();
-    console.log("submit");
     const nameInput = document.querySelector("#food-names").value;
     const carbInput = Number(document.querySelector("#carbs").value);
     const proteinInput = Number(document.querySelector("#protein").value);
     const fatInput = Number(document.querySelector("#fat").value);
+    console.log("fatInput", fatInput);
     let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
     foodItem = {
         nameInput,
@@ -531,55 +528,21 @@ const getInputs = (e)=>{
     };
     if (nameInput !== "" && carbInput && proteinInput && fatInput) {
         _snackbarDefault.default.show("Food added successfully");
-        renderCard(foodItem);
+        renderCard();
         postData(foodItem);
-        baseChart.destroy();
-        baseChart = createChart(foodItem);
+        API.get("duyen").then((data)=>console.log(data)
+        ); // data is an object
     }
 };
-// CREAT CHART
-const createChart = ({ carbInput , proteinInput , fatInput  })=>{
-    const data = {
-        labels: [
-            "Carbs",
-            "Protein",
-            "Fat"
-        ],
-        datasets: [
-            {
-                label: "Macronutrients",
-                backgroundColor: [
-                    "yellow",
-                    "orange",
-                    "green"
-                ],
-                data: [
-                    carbInput,
-                    proteinInput,
-                    fatInput
-                ]
-            }, 
-        ]
-    };
-    const config = {
-        type: "bar",
-        data: data,
-        options: {
-        }
-    };
-    const myChart = new _autoDefault.default(ctx, config);
-    return myChart;
-};
 // RENDER CARD
-const renderCard = ({ nameInput , carbInput , proteinInput , fatInput  })=>{
-    let totalCalo = Number(carbInput * 4 + proteinInput * 4 + fatInput * 9);
-    logAmount.textContent = totalCalo + "kcal";
-    console.log(totalCalo);
-    cards.innerHTML += `\n  <div class="card-item">\n  <h3 class="card-name">${nameInput}</h3>\n  <p><span>${totalCalo}</span> calories</p>\n  <ul class="nutrition-details">\n    <li>\n      <p>Carbs</p>\n      <p class="carb-amount">${carbInput}g</p>\n    </li>\n    <li>\n      <p>Protein</p>\n      <p class="protein-amount">${proteinInput}g</p>\n    </li>\n    <li>\n      <p>Fat</p>\n      <p class="fat-amount">${fatInput}g</p>\n    </li>\n  </ul>\n</div>`;
+const renderCard = async ()=>{
+    const response = await API.get("duyen").then((data)=>{
+        data.documents.forEach((item)=>{
+            cards.insertAdjacentHTML("beforeend", `\n      <div class="card-item">\n      <h3 class="card-name">${item.fields.foodName.stringValue}</h3>\n      <p><span>${item.fields.foodName.stringValue}</span> calories</p>\n      <ul class="nutrition-details">\n        <li>\n          <p>Carbs</p>\n          <p class="carb-amount">${item.fields.carbs.integerValue}g</p>\n        </li>\n        <li>\n          <p>Protein</p>\n          <p class="protein-amount">${item.fields.protein.integerValue}g</p>\n        </li>\n        <li>\n          <p>Fat</p>\n          <p class="fat-amount">${item.fields.fat.integerValue}g</p>\n        </li>\n      </ul>\n    </div>`);
+        });
+    });
     form.reset();
 };
-// CREATE chart with empty data to show at first
-let baseChart = createChart(0, 0, 0);
 // Event Listener
 form.addEventListener("submit", getInputs);
 

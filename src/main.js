@@ -46,16 +46,13 @@ function postData({ nameInput, carbInput, proteinInput, fatInput }) {
   };
 
   // posting data to firebase API
-  console.log(API.post("duyen", body));
+  API.post("duyen", body);
 
   // Get data back after posting from firebase endpoint
   let json = API.get("duyen");
-  API.get(json).then((data) => {
-    console.log(data);
-  });
 }
 
-// Create object using class constructor
+// Object constructor
 
 class FoodObject {
   constructor(name, carb, protein, fat) {
@@ -70,78 +67,55 @@ class FoodObject {
 
 const getInputs = (e) => {
   e.preventDefault();
-  console.log("submit");
   const nameInput = document.querySelector("#food-names").value;
   const carbInput = Number(document.querySelector("#carbs").value);
   const proteinInput = Number(document.querySelector("#protein").value);
   const fatInput = Number(document.querySelector("#fat").value);
+  console.log("fatInput", fatInput);
 
   let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
   foodItem = { nameInput, carbInput, proteinInput, fatInput };
 
   if (nameInput !== "" && carbInput && proteinInput && fatInput) {
     snackbar.show("Food added successfully");
-    renderCard(foodItem);
+    renderCard();
     postData(foodItem);
-    baseChart.destroy();
-    baseChart = createChart(foodItem);
+    API.get("duyen").then((data) => console.log(data)); // data is an object
   }
-};
-
-// CREAT CHART
-
-const createChart = ({ carbInput, proteinInput, fatInput }) => {
-  const data = {
-    labels: ["Carbs", "Protein", "Fat"],
-    datasets: [
-      {
-        label: "Macronutrients",
-        backgroundColor: ["yellow", "orange", "green"],
-        data: [carbInput, proteinInput, fatInput],
-      },
-    ],
-  };
-
-  const config = {
-    type: "bar",
-    data: data,
-    options: {},
-  };
-
-  const myChart = new Chart(ctx, config);
-  return myChart;
 };
 
 // RENDER CARD
 
-const renderCard = ({ nameInput, carbInput, proteinInput, fatInput }) => {
-  let totalCalo = Number(carbInput * 4 + proteinInput * 4 + fatInput * 9);
-  logAmount.textContent = totalCalo + "kcal";
-  console.log(totalCalo);
-  cards.innerHTML += `
-  <div class="card-item">
-  <h3 class="card-name">${nameInput}</h3>
-  <p><span>${totalCalo}</span> calories</p>
-  <ul class="nutrition-details">
-    <li>
-      <p>Carbs</p>
-      <p class="carb-amount">${carbInput}g</p>
-    </li>
-    <li>
-      <p>Protein</p>
-      <p class="protein-amount">${proteinInput}g</p>
-    </li>
-    <li>
-      <p>Fat</p>
-      <p class="fat-amount">${fatInput}g</p>
-    </li>
-  </ul>
-</div>`;
+const renderCard = async () => {
+  const response = await API.get("duyen").then((data) => {
+    data.documents.forEach((item) => {
+      cards.insertAdjacentHTML(
+        "beforeend",
+        `
+      <div class="card-item">
+      <h3 class="card-name">${item.fields.foodName.stringValue}</h3>
+      <p><span>${item.fields.foodName.stringValue}</span> calories</p>
+      <ul class="nutrition-details">
+        <li>
+          <p>Carbs</p>
+          <p class="carb-amount">${item.fields.carbs.integerValue}g</p>
+        </li>
+        <li>
+          <p>Protein</p>
+          <p class="protein-amount">${item.fields.protein.integerValue}g</p>
+        </li>
+        <li>
+          <p>Fat</p>
+          <p class="fat-amount">${item.fields.fat.integerValue}g</p>
+        </li>
+      </ul>
+    </div>`
+      );
+    });
+  });
+
   form.reset();
 };
-
-// CREATE chart with empty data to show at first
-let baseChart = createChart(0, 0, 0);
 
 // Event Listener
 form.addEventListener("submit", getInputs);
