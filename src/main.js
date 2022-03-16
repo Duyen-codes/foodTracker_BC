@@ -137,6 +137,7 @@ const getInputs = (e) => {
     postData(nameInput, carbInput, proteinInput, fatInput);
     renderCard();
     getCalo();
+    snackbar.show("Food added successfully");
   }
 };
 

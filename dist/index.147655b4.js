@@ -566,6 +566,7 @@ const getInputs = (e)=>{
         postData(nameInput, carbInput, proteinInput, fatInput);
         renderCard();
         getCalo();
+        _snackbarDefault.default.show("Food added successfully");
     }
 };
 // Event Listener
