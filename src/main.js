@@ -23,72 +23,27 @@ const API = new FetchWrapper(
 
 // Post Data
 
-function postData({ nameInput, carbInput, proteinInput, fatInput }) {
-  let fat;
-  let protein;
-  let carbs;
-  let foodname;
+function postData(name, carb, protein, fat) {
   let body = {
     fields: {
       fat: {
-        integerValue: fatInput,
+        integerValue: fat,
       },
       protein: {
-        integerValue: proteinInput,
+        integerValue: protein,
       },
-      carbs: {
-        integerValue: carbInput,
+      carb: {
+        integerValue: carb,
       },
       foodName: {
-        stringValue: nameInput,
+        stringValue: name,
       },
     },
   };
 
   // posting data to firebase API
   API.post("duyen", body);
-
-  // Get data back after posting from firebase endpoint
-  let json = API.get("duyen");
 }
-
-// Object constructor
-
-class FoodObject {
-  constructor(name, carb, protein, fat) {
-    this.name = name;
-    this.carb = carb;
-    this.protein = protein;
-    this.fat = fat;
-  }
-}
-
-// Get inputs from form
-
-const getInputs = (e) => {
-  e.preventDefault();
-  const nameInput = document.querySelector("#food-names").value;
-  const carbInput = Number(document.querySelector("#carbs").value);
-  const proteinInput = Number(document.querySelector("#protein").value);
-  const fatInput = Number(document.querySelector("#fat").value);
-  console.log(
-    "carbInput: ",
-    carbInput,
-    "proteinInput: ",
-    "fatInput: ",
-    fatInput
-  );
-
-  let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
-  foodItem = { nameInput, carbInput, proteinInput, fatInput };
-
-  if (nameInput !== "" && carbInput && proteinInput && fatInput) {
-    snackbar.show("Food added successfully");
-    renderCard();
-    postData(foodItem);
-    API.get("duyen").then((data) => console.log(data)); // data is an object
-  }
-};
 
 // RENDER CARD
 
@@ -99,12 +54,12 @@ const renderCard = () => {
         "beforeend",
         `
       <div class="card-item">
-      <h3 class="card-name">${item.fields.foodName.stringValue}</h3>
-      <p><span>${item.fields.foodName.stringValue}</span> calories</p>
+      <h3 class="card-name">${item.fields.name.stringValue}</h3>
+      <p><span>${item.fields.name.stringValue}</span> calories</p>
       <ul class="nutrition-details">
         <li>
           <p>Carbs</p>
-          <p class="carb-amount">${item.fields.carbs.integerValue}g</p>
+          <p class="carb-amount">${item.fields.carb.integerValue}g</p>
         </li>
         <li>
           <p>Protein</p>
@@ -125,6 +80,23 @@ const renderCard = () => {
 
 // Show card on page load
 renderCard();
+
+// Get inputs from form
+
+const getInputs = (e) => {
+  e.preventDefault();
+  const nameInput = document.querySelector("#food-names").value;
+  const carbInput = Number(document.querySelector("#carbs").value);
+  const proteinInput = Number(document.querySelector("#protein").value);
+  const fatInput = Number(document.querySelector("#fat").value);
+
+  if (nameInput !== "" && carbInput && proteinInput && fatInput) {
+    snackbar.show("Food added successfully");
+
+    postData(nameInput, carbInput, proteinInput, fatInput);
+    renderCard();
+  }
+};
 
 // Event Listener
 form.addEventListener("submit", getInputs);

@@ -476,41 +476,37 @@ const ctx = document.querySelector("#myChart").getContext("2d");
 // Fetch API
 const API = new _fetchWrapper.FetchWrapper("https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/");
 // Post Data
-function postData({ nameInput , carbInput , proteinInput , fatInput  }) {
-    let fat;
-    let protein;
-    let carbs;
-    let foodname;
+function postData(name, carb, protein, fat) {
     let body = {
         fields: {
             fat: {
-                integerValue: fatInput
+                integerValue: fat
             },
             protein: {
-                integerValue: proteinInput
+                integerValue: protein
             },
-            carbs: {
-                integerValue: carbInput
+            carb: {
+                integerValue: carb
             },
             foodName: {
-                stringValue: nameInput
+                stringValue: name
             }
         }
     };
     // posting data to firebase API
     API.post("duyen", body);
-    // Get data back after posting from firebase endpoint
-    let json = API.get("duyen");
 }
-// Object constructor
-class FoodObject {
-    constructor(name, carb, protein, fat){
-        this.name = name;
-        this.carb = carb;
-        this.protein = protein;
-        this.fat = fat;
-    }
-}
+// RENDER CARD
+const renderCard = ()=>{
+    API.get("duyen").then((data)=>{
+        data.documents.forEach((item)=>{
+            cards.insertAdjacentHTML("beforeend", `\n      <div class="card-item">\n      <h3 class="card-name">${item.fields.name.stringValue}</h3>\n      <p><span>${item.fields.name.stringValue}</span> calories</p>\n      <ul class="nutrition-details">\n        <li>\n          <p>Carbs</p>\n          <p class="carb-amount">${item.fields.carb.integerValue}g</p>\n        </li>\n        <li>\n          <p>Protein</p>\n          <p class="protein-amount">${item.fields.protein.integerValue}g</p>\n        </li>\n        <li>\n          <p>Fat</p>\n          <p class="fat-amount">${item.fields.fat.integerValue}g</p>\n        </li>\n      </ul>\n    </div>`);
+        });
+    });
+    form.reset();
+};
+// Show card on page load
+renderCard();
 // Get inputs from form
 const getInputs = (e)=>{
     e.preventDefault();
@@ -518,33 +514,12 @@ const getInputs = (e)=>{
     const carbInput = Number(document.querySelector("#carbs").value);
     const proteinInput = Number(document.querySelector("#protein").value);
     const fatInput = Number(document.querySelector("#fat").value);
-    console.log("carbInput: ", carbInput, "proteinInput: ", "fatInput: ", fatInput);
-    let foodItem = new FoodObject(nameInput, carbInput, proteinInput, fatInput);
-    foodItem = {
-        nameInput,
-        carbInput,
-        proteinInput,
-        fatInput
-    };
     if (nameInput !== "" && carbInput && proteinInput && fatInput) {
         _snackbarDefault.default.show("Food added successfully");
+        postData(nameInput, carbInput, proteinInput, fatInput);
         renderCard();
-        postData(foodItem);
-        API.get("duyen").then((data)=>console.log(data)
-        ); // data is an object
     }
 };
-// RENDER CARD
-const renderCard = ()=>{
-    API.get("duyen").then((data)=>{
-        data.documents.forEach((item)=>{
-            cards.insertAdjacentHTML("beforeend", `\n      <div class="card-item">\n      <h3 class="card-name">${item.fields.foodName.stringValue}</h3>\n      <p><span>${item.fields.foodName.stringValue}</span> calories</p>\n      <ul class="nutrition-details">\n        <li>\n          <p>Carbs</p>\n          <p class="carb-amount">${item.fields.carbs.integerValue}g</p>\n        </li>\n        <li>\n          <p>Protein</p>\n          <p class="protein-amount">${item.fields.protein.integerValue}g</p>\n        </li>\n        <li>\n          <p>Fat</p>\n          <p class="fat-amount">${item.fields.fat.integerValue}g</p>\n        </li>\n      </ul>\n    </div>`);
-        });
-    });
-    form.reset();
-};
-// Show card on page load
-renderCard();
 // Event Listener
 form.addEventListener("submit", getInputs);
 
