@@ -6,14 +6,7 @@ import { FetchWrapper } from "./fetch-wrapper";
 
 // Queries
 const cards = document.querySelector(".cards");
-const logAmount = document.querySelector(".log-amount");
-const carbAmount = document.querySelector(".carb-amount");
-const proteinAmount = document.querySelector(".protein-amount");
-const fatAmount = document.querySelector(".fat-amount");
-const cardName = document.querySelector(".card-name");
 const form = document.querySelector("form");
-// Add chart
-const ctx = document.querySelector("#myChart").getContext("2d");
 
 // Fetch API
 
@@ -23,7 +16,7 @@ const API = new FetchWrapper(
 
 // Post Data
 
-function postData(name, carb, protein, fat) {
+function postData(foodName, carbs, protein, fat) {
   let body = {
     fields: {
       fat: {
@@ -32,34 +25,40 @@ function postData(name, carb, protein, fat) {
       protein: {
         integerValue: protein,
       },
-      carb: {
-        integerValue: carb,
+      carbs: {
+        integerValue: carbs,
       },
       foodName: {
-        stringValue: name,
+        stringValue: foodName,
       },
     },
   };
 
   // posting data to firebase API
-  API.post("duyen", body);
+  API.post("helsinki123", body);
 }
 
 // RENDER CARD
 
 const renderCard = () => {
-  API.get("duyen").then((data) => {
+  API.get("helsinki123").then((data) => {
     data.documents.forEach((item) => {
+      let foodTotalCalo =
+        Number(item.fields.carbs.integerValue) * 4 +
+        Number(item.fields.protein.integerValue) * 4 +
+        Number(item.fields.fat.integerValue) * 9;
       cards.insertAdjacentHTML(
         "beforeend",
         `
       <div class="card-item">
-      <h3 class="card-name">${item.fields.name.stringValue}</h3>
-      <p><span>${item.fields.name.stringValue}</span> calories</p>
+      <h3 class="card-name">${item.fields.foodName.stringValue}</h3>
+      <p><span>${foodTotalCalo}</span> calories</p>
       <ul class="nutrition-details">
         <li>
           <p>Carbs</p>
-          <p class="carb-amount">${item.fields.carb.integerValue}g</p>
+          <p class="carb-amount">${
+            item.fields.carbs.integerValue || item.fields.carb.integerValue
+          }g</p>
         </li>
         <li>
           <p>Protein</p>
@@ -81,10 +80,50 @@ const renderCard = () => {
 // Show card on page load
 renderCard();
 
-// Get inputs from form
+// Get total calories of carbs, protein, fat
+let logAmount = document.querySelector(".log-amount");
+function getCalo() {
+  API.get("helsinki123").then((data) => {
+    let carbs = data.documents.reduce(function (sum, current) {
+      return sum + Number(current.fields.carbs.integerValue);
+    }, 0);
 
+    let carbsCalo = carbs * 4;
+    let protein = data.documents.reduce(function (sum, current) {
+      return sum + Number(current.fields.protein.integerValue);
+    }, 0);
+    let proteinCalo = protein * 4;
+    let fat = data.documents.reduce(function (sum, current) {
+      return sum + Number(current.fields.fat.integerValue);
+    }, 0);
+    let fatCalo = fat * 9;
+    let totalCalo = carbs * 4 + protein * 4 + fat * 9;
+    console.log(carbsCalo, proteinCalo, fatCalo);
+    logAmount.textContent = totalCalo;
+    function createChart() {
+      const nutriChart = document.getElementById("nutriChart").getContext("2d");
+      const chart = new Chart(nutriChart, {
+        type: "bar",
+        data: {
+          labels: ["Carbs", "Protein", "Fat"],
+          datasets: [
+            {
+              label: "Macronutrients",
+              data: [carbsCalo, proteinCalo, fatCalo],
+              backgroundColor: ["yellow", "green", "orange"],
+            },
+          ],
+        },
+        options: {},
+      });
+    }
+    createChart();
+  });
+}
+getCalo();
+// Get inputs from form
 const getInputs = (e) => {
-  e.preventDefault();
+  // e.preventDefault();
   const nameInput = document.querySelector("#food-names").value;
   const carbInput = Number(document.querySelector("#carbs").value);
   const proteinInput = Number(document.querySelector("#protein").value);
@@ -95,8 +134,11 @@ const getInputs = (e) => {
 
     postData(nameInput, carbInput, proteinInput, fatInput);
     renderCard();
+    getCalo();
   }
 };
 
 // Event Listener
 form.addEventListener("submit", getInputs);
+
+// Create chart
