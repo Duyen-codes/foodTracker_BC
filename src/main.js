@@ -100,27 +100,29 @@ function getCalo() {
     let totalCalo = carbs * 4 + protein * 4 + fat * 9;
     console.log(carbsCalo, proteinCalo, fatCalo);
     logAmount.textContent = totalCalo;
-    function createChart() {
-      const nutriChart = document.getElementById("nutriChart").getContext("2d");
-      const chart = new Chart(nutriChart, {
-        type: "bar",
-        data: {
-          labels: ["Carbs", "Protein", "Fat"],
-          datasets: [
-            {
-              label: "Macronutrients",
-              data: [carbsCalo, proteinCalo, fatCalo],
-              backgroundColor: ["yellow", "green", "orange"],
-            },
-          ],
-        },
-        options: {},
-      });
-    }
-    createChart();
+    createChart(carbsCalo, proteinCalo, fatCalo);
   });
 }
 getCalo();
+
+function createChart(carbsCalo, proteinCalo, fatCalo) {
+  const nutriChart = document.getElementById("nutriChart").getContext("2d");
+  const chart = new Chart(nutriChart, {
+    type: "bar",
+    data: {
+      labels: ["Carbs", "Protein", "Fat"],
+      datasets: [
+        {
+          label: "Macronutrients",
+          data: [carbsCalo, proteinCalo, fatCalo],
+          backgroundColor: ["yellow", "green", "orange"],
+        },
+      ],
+    },
+    options: {},
+  });
+}
+
 // Get inputs from form
 const getInputs = (e) => {
   // e.preventDefault();
