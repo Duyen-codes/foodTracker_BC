@@ -571,7 +571,7 @@ const getInputs = (e)=>{
 // Event Listener
 form.addEventListener("submit", getInputs); // Create chart
 
-},{"snackbar":"60sYh","snackbar/dist/snackbar.min.css":"gJlwf","chart.js/auto":"f3sfP","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./fetch-wrapper":"gQ6Ql"}],"60sYh":[function(require,module,exports) {
+},{"snackbar":"60sYh","snackbar/dist/snackbar.min.css":"gJlwf","chart.js/auto":"f3sfP","./fetch-wrapper":"gQ6Ql","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc"}],"60sYh":[function(require,module,exports) {
 'use strict';
 var _snackbar = require('./snackbar');
 var _snackbar2 = _interopRequireDefault(_snackbar);
