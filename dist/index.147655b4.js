@@ -465,18 +465,11 @@ var _autoDefault = parcelHelpers.interopDefault(_auto);
 var _fetchWrapper = require("./fetch-wrapper");
 // Queries
 const cards = document.querySelector(".cards");
-const logAmount = document.querySelector(".log-amount");
-const carbAmount = document.querySelector(".carb-amount");
-const proteinAmount = document.querySelector(".protein-amount");
-const fatAmount = document.querySelector(".fat-amount");
-const cardName = document.querySelector(".card-name");
 const form = document.querySelector("form");
-// Add chart
-const ctx = document.querySelector("#myChart").getContext("2d");
 // Fetch API
 const API = new _fetchWrapper.FetchWrapper("https://firestore.googleapis.com/v1/projects/programmingjs-90a13/databases/(default)/documents/");
 // Post Data
-function postData(name, carb, protein, fat) {
+function postData(foodName, carbs, protein, fat) {
     let body = {
         fields: {
             fat: {
@@ -485,31 +478,85 @@ function postData(name, carb, protein, fat) {
             protein: {
                 integerValue: protein
             },
-            carb: {
-                integerValue: carb
+            carbs: {
+                integerValue: carbs
             },
             foodName: {
-                stringValue: name
+                stringValue: foodName
             }
         }
     };
     // posting data to firebase API
-    API.post("duyen", body);
+    API.post("helsinki123", body);
 }
 // RENDER CARD
 const renderCard = ()=>{
-    API.get("duyen").then((data)=>{
+    API.get("helsinki123").then((data)=>{
         data.documents.forEach((item)=>{
-            cards.insertAdjacentHTML("beforeend", `\n      <div class="card-item">\n      <h3 class="card-name">${item.fields.name.stringValue}</h3>\n      <p><span>${item.fields.name.stringValue}</span> calories</p>\n      <ul class="nutrition-details">\n        <li>\n          <p>Carbs</p>\n          <p class="carb-amount">${item.fields.carb.integerValue}g</p>\n        </li>\n        <li>\n          <p>Protein</p>\n          <p class="protein-amount">${item.fields.protein.integerValue}g</p>\n        </li>\n        <li>\n          <p>Fat</p>\n          <p class="fat-amount">${item.fields.fat.integerValue}g</p>\n        </li>\n      </ul>\n    </div>`);
+            let foodTotalCalo = Number(item.fields.carbs.integerValue) * 4 + Number(item.fields.protein.integerValue) * 4 + Number(item.fields.fat.integerValue) * 9;
+            cards.insertAdjacentHTML("beforeend", `\n      <div class="card-item">\n      <h3 class="card-name">${item.fields.foodName.stringValue}</h3>\n      <p><span>${foodTotalCalo}</span> calories</p>\n      <ul class="nutrition-details">\n        <li>\n          <p>Carbs</p>\n          <p class="carb-amount">${item.fields.carbs.integerValue || item.fields.carb.integerValue}g</p>\n        </li>\n        <li>\n          <p>Protein</p>\n          <p class="protein-amount">${item.fields.protein.integerValue}g</p>\n        </li>\n        <li>\n          <p>Fat</p>\n          <p class="fat-amount">${item.fields.fat.integerValue}g</p>\n        </li>\n      </ul>\n    </div>`);
         });
     });
     form.reset();
 };
 // Show card on page load
 renderCard();
+// Get total calories of carbs, protein, fat
+let logAmount = document.querySelector(".log-amount");
+function getCalo() {
+    API.get("helsinki123").then((data)=>{
+        let carbs = data.documents.reduce(function(sum, current) {
+            return sum + Number(current.fields.carbs.integerValue);
+        }, 0);
+        let carbsCalo = carbs * 4;
+        let protein = data.documents.reduce(function(sum, current) {
+            return sum + Number(current.fields.protein.integerValue);
+        }, 0);
+        let proteinCalo = protein * 4;
+        let fat = data.documents.reduce(function(sum, current) {
+            return sum + Number(current.fields.fat.integerValue);
+        }, 0);
+        let fatCalo = fat * 9;
+        let totalCalo = carbs * 4 + protein * 4 + fat * 9;
+        console.log(carbsCalo, proteinCalo, fatCalo);
+        logAmount.textContent = totalCalo;
+        createChart(carbsCalo, proteinCalo, fatCalo);
+    });
+}
+getCalo();
+function createChart(carbsCalo, proteinCalo, fatCalo) {
+    const nutriChart = document.getElementById("nutriChart").getContext("2d");
+    const chart = new _autoDefault.default(nutriChart, {
+        type: "bar",
+        data: {
+            labels: [
+                "Carbs",
+                "Protein",
+                "Fat"
+            ],
+            datasets: [
+                {
+                    label: "Macronutrients",
+                    data: [
+                        carbsCalo,
+                        proteinCalo,
+                        fatCalo
+                    ],
+                    backgroundColor: [
+                        "yellow",
+                        "green",
+                        "orange"
+                    ]
+                }, 
+            ]
+        },
+        options: {
+        }
+    });
+}
 // Get inputs from form
 const getInputs = (e)=>{
-    e.preventDefault();
+    // e.preventDefault();
     const nameInput = document.querySelector("#food-names").value;
     const carbInput = Number(document.querySelector("#carbs").value);
     const proteinInput = Number(document.querySelector("#protein").value);
@@ -518,10 +565,11 @@ const getInputs = (e)=>{
         _snackbarDefault.default.show("Food added successfully");
         postData(nameInput, carbInput, proteinInput, fatInput);
         renderCard();
+        getCalo();
     }
 };
 // Event Listener
-form.addEventListener("submit", getInputs);
+form.addEventListener("submit", getInputs); // Create chart
 
 },{"snackbar":"60sYh","snackbar/dist/snackbar.min.css":"gJlwf","chart.js/auto":"f3sfP","@parcel/transformer-js/src/esmodule-helpers.js":"JacNc","./fetch-wrapper":"gQ6Ql"}],"60sYh":[function(require,module,exports) {
 'use strict';
