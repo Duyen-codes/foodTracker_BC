@@ -40,7 +40,7 @@ header {
 }
 
 ul {
-  list-style: none;
+  list-style: square;
 }
 
 a {
@@ -116,7 +116,6 @@ label {
   border-radius: 1rem;
   border: 1px solid #ddd;
   padding: 2rem;
-  /* width: 90%; */
   margin: 0 auto;
   text-align: center;
 }
